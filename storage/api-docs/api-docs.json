@@ -1,0 +1,100 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Currency",
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/currency": {
+            "get": {
+                "summary": "Get All Currencies",
+                "operationId": "153c9614bb2ac7f83fdb701a4c074710",
+                "responses": {
+                    "200": {
+                        "description": "Get All Currencies"
+                    }
+                }
+            }
+        },
+        "/api/currency/convert": {
+            "get": {
+                "summary": "Convert Value To Specific Currency",
+                "operationId": "28ff7cd1488e0d0e2209c3657aa58405",
+                "parameters": [
+                    {
+                        "name": "value",
+                        "in": "query",
+                        "description": "Value to Convert",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "Currency From Convert",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "description": "Currency To Convert",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get Currency of values passed"
+                    }
+                }
+            }
+        },
+        "/api/currency/convertMultiple": {
+            "get": {
+                "summary": "Convert Values To Multiples Currencies",
+                "operationId": "8819fc85b2a8167e60113c92dded8f8f",
+                "parameters": [
+                    {
+                        "name": "value",
+                        "in": "query",
+                        "description": "Value to Convert",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "Currency From Convert",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "description": "Currencies To Convert",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get Currency of values passed"
+                    }
+                }
+            }
+        }
+    },
+    "security": [
+        []
+    ]
+}

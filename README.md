@@ -1,66 +1,295 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Currency
 
-## About Laravel
+The following project is a simple currency converter, it is intended to meet the following requirements
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+-   [x] Allows to convert amounts between currencies
+-   [ ] It allows to optionally determine the date of the history to be used to perform the conversion.
+-   [x] An API must be exposed to perform the conversion.
+-   [x] Multiple conversions must be allowed
+-   [x] Some storage/cache mechanism for the conversion rates must be implemented.
+-   [x] Project must have automated testing
+-   [x] Installation/operation manual
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Installation
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Create the project database in this case we will use MySQL.
 
-## Learning Laravel
+```bash
+  mysql -u root
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+```bash
+  CREATE DATABASE db_name;
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+We set up our database in the `.env` file.
 
-## Laravel Sponsors
+```php
+    DB_CONNECTION=pgsql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=db_name
+    DB_USERNAME=db_username
+    DB_PASSWORD=db_password
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+We updated our dependencies.
 
-### Premium Partners
+```bash
+  composer update
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[CMS Max](https://www.cmsmax.com/)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-- **[Romega Software](https://romegasoftware.com)**
+We execute our migrations
 
-## Contributing
+```bash
+  php artisan migrate
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Execution
 
-## Code of Conduct
+Once our application is installed and configured, we execute it with the command.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+  php artisan serve
+```
 
-## Security Vulnerabilities
+## API Reference
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+#### Get all Currencies
 
+```http
+  GET /api/currency
+```
+#### Convert Value To Specific Currency
+
+```http
+  GET /api/currency/convert
+```
+
+| Parameter | Type     | Description                                |
+| :-------- | :------- | :----------------------------------------- |
+| `from`    | `string` | **Required**. Currency of actual value     |
+| `to`      | `string` | **Required**. Currency of value to convert |
+| `value`   | `number` | **Required**. Value To Convert             |
+
+#### Convert Value To Multiple Currencies
+
+```http
+  GET /api/currency/convertMultiple
+```
+
+| Parameter | Type     | Description                                  |
+| :-------- | :------- | :------------------------------------------- |
+| `from`    | `string` | **Required**. Currency of actual value       |
+| `to`      | `array`  | **Required**. Currencies of value to convert |
+| `value`   | `number` | **Required**. Value To Convert               |
+
+
+__NOTA: Swagger documentation available at: `http://127.0.0.1:8000/api/documentation`__
+
+## Check Currency
+
+The application maintains daily at midnight a history of the values (of the currencies) and updates the currencies with their new values by relying on the following service `https://currencylayer.com/documentation`.
+
+## Currencies Supported
+
+```json
+  "currencies": {
+    "AED": "United Arab Emirates Dirham",
+    "AFN": "Afghan Afghani",
+    "ALL": "Albanian Lek",
+    "AMD": "Armenian Dram",
+    "ANG": "Netherlands Antillean Guilder",
+    "AOA": "Angolan Kwanza",
+    "ARS": "Argentine Peso",
+    "AUD": "Australian Dollar",
+    "AWG": "Aruban Florin",
+    "AZN": "Azerbaijani Manat",
+    "BAM": "Bosnia-Herzegovina Convertible Mark",
+    "BBD": "Barbadian Dollar",
+    "BDT": "Bangladeshi Taka",
+    "BGN": "Bulgarian Lev",
+    "BHD": "Bahraini Dinar",
+    "BIF": "Burundian Franc",
+    "BMD": "Bermudan Dollar",
+    "BND": "Brunei Dollar",
+    "BOB": "Bolivian Boliviano",
+    "BRL": "Brazilian Real",
+    "BSD": "Bahamian Dollar",
+    "BTC": "Bitcoin",
+    "BTN": "Bhutanese Ngultrum",
+    "BWP": "Botswanan Pula",
+    "BYN": "New Belarusian Ruble",
+    "BYR": "Belarusian Ruble",
+    "BZD": "Belize Dollar",
+    "CAD": "Canadian Dollar",
+    "CDF": "Congolese Franc",
+    "CHF": "Swiss Franc",
+    "CLF": "Chilean Unit of Account (UF)",
+    "CLP": "Chilean Peso",
+    "CNY": "Chinese Yuan",
+    "COP": "Colombian Peso",
+    "CRC": "Costa Rican Colón",
+    "CUC": "Cuban Convertible Peso",
+    "CUP": "Cuban Peso",
+    "CVE": "Cape Verdean Escudo",
+    "CZK": "Czech Republic Koruna",
+    "DJF": "Djiboutian Franc",
+    "DKK": "Danish Krone",
+    "DOP": "Dominican Peso",
+    "DZD": "Algerian Dinar",
+    "EGP": "Egyptian Pound",
+    "ERN": "Eritrean Nakfa",
+    "ETB": "Ethiopian Birr",
+    "EUR": "Euro",
+    "FJD": "Fijian Dollar",
+    "FKP": "Falkland Islands Pound",
+    "GBP": "British Pound Sterling",
+    "GEL": "Georgian Lari",
+    "GGP": "Guernsey Pound",
+    "GHS": "Ghanaian Cedi",
+    "GIP": "Gibraltar Pound",
+    "GMD": "Gambian Dalasi",
+    "GNF": "Guinean Franc",
+    "GTQ": "Guatemalan Quetzal",
+    "GYD": "Guyanaese Dollar",
+    "HKD": "Hong Kong Dollar",
+    "HNL": "Honduran Lempira",
+    "HRK": "Croatian Kuna",
+    "HTG": "Haitian Gourde",
+    "HUF": "Hungarian Forint",
+    "IDR": "Indonesian Rupiah",
+    "ILS": "Israeli New Sheqel",
+    "IMP": "Manx pound",
+    "INR": "Indian Rupee",
+    "IQD": "Iraqi Dinar",
+    "IRR": "Iranian Rial",
+    "ISK": "Icelandic Króna",
+    "JEP": "Jersey Pound",
+    "JMD": "Jamaican Dollar",
+    "JOD": "Jordanian Dinar",
+    "JPY": "Japanese Yen",
+    "KES": "Kenyan Shilling",
+    "KGS": "Kyrgystani Som",
+    "KHR": "Cambodian Riel",
+    "KMF": "Comorian Franc",
+    "KPW": "North Korean Won",
+    "KRW": "South Korean Won",
+    "KWD": "Kuwaiti Dinar",
+    "KYD": "Cayman Islands Dollar",
+    "KZT": "Kazakhstani Tenge",
+    "LAK": "Laotian Kip",
+    "LBP": "Lebanese Pound",
+    "LKR": "Sri Lankan Rupee",
+    "LRD": "Liberian Dollar",
+    "LSL": "Lesotho Loti",
+    "LTL": "Lithuanian Litas",
+    "LVL": "Latvian Lats",
+    "LYD": "Libyan Dinar",
+    "MAD": "Moroccan Dirham",
+    "MDL": "Moldovan Leu",
+    "MGA": "Malagasy Ariary",
+    "MKD": "Macedonian Denar",
+    "MMK": "Myanma Kyat",
+    "MNT": "Mongolian Tugrik",
+    "MOP": "Macanese Pataca",
+    "MRO": "Mauritanian Ouguiya",
+    "MUR": "Mauritian Rupee",
+    "MVR": "Maldivian Rufiyaa",
+    "MWK": "Malawian Kwacha",
+    "MXN": "Mexican Peso",
+    "MYR": "Malaysian Ringgit",
+    "MZN": "Mozambican Metical",
+    "NAD": "Namibian Dollar",
+    "NGN": "Nigerian Naira",
+    "NIO": "Nicaraguan Córdoba",
+    "NOK": "Norwegian Krone",
+    "NPR": "Nepalese Rupee",
+    "NZD": "New Zealand Dollar",
+    "OMR": "Omani Rial",
+    "PAB": "Panamanian Balboa",
+    "PEN": "Peruvian Nuevo Sol",
+    "PGK": "Papua New Guinean Kina",
+    "PHP": "Philippine Peso",
+    "PKR": "Pakistani Rupee",
+    "PLN": "Polish Zloty",
+    "PYG": "Paraguayan Guarani",
+    "QAR": "Qatari Rial",
+    "RON": "Romanian Leu",
+    "RSD": "Serbian Dinar",
+    "RUB": "Russian Ruble",
+    "RWF": "Rwandan Franc",
+    "SAR": "Saudi Riyal",
+    "SBD": "Solomon Islands Dollar",
+    "SCR": "Seychellois Rupee",
+    "SDG": "Sudanese Pound",
+    "SEK": "Swedish Krona",
+    "SGD": "Singapore Dollar",
+    "SHP": "Saint Helena Pound",
+    "SLL": "Sierra Leonean Leone",
+    "SOS": "Somali Shilling",
+    "SRD": "Surinamese Dollar",
+    "STD": "São Tomé and Príncipe Dobra",
+    "SVC": "Salvadoran Colón",
+    "SYP": "Syrian Pound",
+    "SZL": "Swazi Lilangeni",
+    "THB": "Thai Baht",
+    "TJS": "Tajikistani Somoni",
+    "TMT": "Turkmenistani Manat",
+    "TND": "Tunisian Dinar",
+    "TOP": "Tongan Paʻanga",
+    "TRY": "Turkish Lira",
+    "TTD": "Trinidad and Tobago Dollar",
+    "TWD": "New Taiwan Dollar",
+    "TZS": "Tanzanian Shilling",
+    "UAH": "Ukrainian Hryvnia",
+    "UGX": "Ugandan Shilling",
+    "USD": "United States Dollar",
+    "UYU": "Uruguayan Peso",
+    "UZS": "Uzbekistan Som",
+    "VEF": "Venezuelan Bolívar Fuerte",
+    "VND": "Vietnamese Dong",
+    "VUV": "Vanuatu Vatu",
+    "WST": "Samoan Tala",
+    "XAF": "CFA Franc BEAC",
+    "XAG": "Silver (troy ounce)",
+    "XAU": "Gold (troy ounce)",
+    "XCD": "East Caribbean Dollar",
+    "XDR": "Special Drawing Rights",
+    "XOF": "CFA Franc BCEAO",
+    "XPF": "CFP Franc",
+    "YER": "Yemeni Rial",
+    "ZAR": "South African Rand",
+    "ZMK": "Zambian Kwacha (pre-2013)",
+    "ZMW": "Zambian Kwacha",
+    "ZWL": "Zimbabwean Dollar"
+  }
+```
+
+### Command
+
+```bash
+  php artisan check:currency
+```
+
+### Actual Command Config
+
+```php
+  protected function schedule(Schedule $schedule)
+  {
+    $schedule->command('check:currency')->daily();
+  }
+```
+
+## Running Tests
+
+To run tests, run the following command
+
+```bash
+  phpunit
+```
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
