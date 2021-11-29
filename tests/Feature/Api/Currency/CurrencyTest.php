@@ -1,7 +1,8 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Api\Currency;
 
+use Database\Seeders\CurrencySeeder;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
@@ -9,6 +10,8 @@ use Tests\TestCase;
 class CurrencyTest extends TestCase
 {
     protected $seed = true;
+
+    protected $seeder = CurrencySeeder::class;
 
     public function test_get_currencies()
     {
